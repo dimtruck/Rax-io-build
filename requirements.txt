@@ -1,0 +1,5 @@
+GitPython
+jenkinsapi
+python-keystoneclient
+retrying
+decorator
