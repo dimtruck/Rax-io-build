@@ -1,35 +1,4 @@
 # DO NOT TEST YOUR PATCHES HERE.  ASK THE BUILD MONKEY BEFORE EDITING THIS FILE.
 
-# remove flaky test
+# downstream commit to add
 git cherry-pick rackerlabs/remove-flaky-test
-
-# port–check-tempest
-git cherry-pick rackerlabs/port-check-tempest
-
-# ignore-glance
-git cherry-pick rackerlabs/ignore-glance
-
-# add-patch-tests
-git cherry-pick rackerlabs/add-patch-tests
-
-git cherry-pick --strategy=recursive -Xtheirs rackerlabs/remove-flaky-unit-tests
-
-git cherry-pick --strategy=recursive -Xtheirs rackerlabs/skip_image_builder
-
-git cherry-pick --strategy=recursive -Xtheirs rackerlabs/use_header_with_disabled_auth
-
-git merge -Xtheirs rackerlabs/impersonation
-
-git merge -Xtheirs rackerlabs/trigger-unit-test-fix
-
-git merge -Xtheirs rackerlabs/forwarded-protocol-header
-
-git merge -Xtheirs rackerlabs/add-tag-to-setup
-
-git merge -Xtheirs rackerlabs/queued-status
-
-git merge -Xtheirs rackerlabs/solum-endpoint
-
-git merge -Xtheirs rackerlabs/deployment-fix 
-
-git merge -Xtheirs rackerlabs/git-checksum
