@@ -142,7 +142,7 @@ fi
 
 # Create a branch for the release type
 if [[ $push -eq 1 ]]; then
-    git push -f rackerlabs builds/$branch:refs/heads/$branch
+    git push -f internal_repo builds/$branch:refs/heads/$branch
 fi
 if [[ $out_file ]]; then
     echo $branch > $out_file
