@@ -1,4 +1,4 @@
 # DO NOT TEST YOUR PATCHES HERE.  ASK THE BUILD MONKEY BEFORE EDITING THIS FILE.
 
 # downstream commit to add
-git cherry-pick rackerlabs/remove-flaky-test
+# git cherry-pick rackerlabs/remove-flaky-test
