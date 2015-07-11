@@ -1,0 +1,83 @@
+#!/bin/bash -ex
+
+
+push=1
+release_head="latest"
+checkout=$(pwd)
+# Parse command-line options
+while getopts "i:d:h:no:r:tv8z:e:" opt; do
+    case "$opt" in
+        d)  downstream_version=$OPTARG
+            ;;
+        h)  release_head=$OPTARG
+            ;;
+        n)  push=0
+            ;;
+        o)  out_file=$OPTARG
+            ;;
+        x)  remove_resources=$OPTARG
+            ;;
+        r)  private_repo=$OPTARG
+            ;;
+        t)  run_tests=1
+            ;;
+        8)  run_pep=1
+            ;;
+        e)  previous_version=$OPTARG
+            ;;
+        i)  ssh_key=$OPTARG
+            ;;
+        \?) echo "Invalid option: -$OPTARG" >&2
+            echo -e "$usage"
+            exit 1
+            ;;
+        :)
+            echo "Option -$OPTARG requires an argument." >&2
+            exit 1
+            ;;
+    esac
+done
+
+# Make sure all required options have been given
+if ! [[ $private_repo && $downstream_version ]]
+then
+    echo -e "The -r and -d options are required.\n"
+    echo -e "$usage $private_repo $downstream_version"
+    exit 1
+fi
+
+# Construct upstream version string
+cd $private_repo
+git fetch upstream
+if [[ $release_head == "latest" ]]; then
+    sha1=$(git rev-parse upstream/master | cut -c1-7)
+else
+    sha1=$release_head
+fi
+upstream_version=$(date '+%Y%m%d')-g$sha1
+
+branch=upstream
+
+# Delete branch if it already exists
+if git show-ref builds/$branch; then
+    git checkout upstream/master
+    git branch -D builds/$branch
+fi
+
+# Create a branch at upstream SHA1
+git branch builds/$branch $sha1
+git checkout builds/$branch
+echo $branch
+
+# Generate changelog
+python $checkout/scripts/changelog.py --output changelog ${previous_version} builds/${branch}
+git add changelog
+git commit -m "Add release changelog for ${branch}"
+
+# Create a branch for the release type
+if [[ $push -eq 1 ]]; then
+    git push -f private builds/$branch:refs/heads/$branch
+fi
+if [[ $out_file ]]; then
+    echo $branch > $out_file
+fi
